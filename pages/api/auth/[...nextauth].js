@@ -1,3 +1,5 @@
+/* eslint-disable */
+
 import NextAuth from 'next-auth';
 import Providers from 'next-auth/providers';
 
@@ -15,7 +17,7 @@ const options = {
         password: { label: "Password", type: "password" }
       },
        async authorize(credentials) {
-        console.log('authorizeauthorize');
+        console.log('authorizeauthorize', credentials);
 
         // Add logic here to look up the user from the credentials supplied
         const user = { id: 1, name: 'J Smith', email: 'jsmith@example.com' }
@@ -35,10 +37,6 @@ const options = {
   ],
   secret: 'this is a string that i should set an maybe use an env variable',
   callbacks: {
-    async authorize(user, account, profile) {
-      console.log('CB:authorize', {user, account, profile});
-      return true
-    },
     async signIn(user, account, profile) {
       console.log('CB:signIn', {user, account, profile});
       const isAllowedToSignIn = true
@@ -46,23 +44,23 @@ const options = {
         return true
       }
     },
-    async jwt(token, user, account, profile, isNewUser) {
+    async Xjwt(token, user, account, profile, isNewUser) {
       console.log('CB:JWT', {token, user, account, profile, isNewUser})
       // Add access_token to the token right after signin
-      if (account?.accessToken) {
+      if (account && account.accessToken) {
         token.accessToken = account.accessToken
       }
       return token
     },
-    async session(session, token) {
+    async Xsession(session, token) {
       console.log('CB:SESSION!', {token, user, account, profile, isNewUser})
-      if(token?.accessToken) {
+      if(token && token.accessToken) {
         // Add property to session, like an access_token from a provider
         session.accessToken = token.accessToken
       }
       return session
     },
-    async redirect(url, baseUrl) {
+    async Xredirect(url, baseUrl) {
       console.log('CB:REDIRECT!', {url, baseUrl})
       return url.startsWith(baseUrl)
         ? url
